@@ -8,7 +8,7 @@
     <style>
        *{margin:0;padding:0;}
 	   #box{
-		width:100px;
+		width:500px;
 		height:100px;
 		background:red;
 	   }
@@ -24,22 +24,34 @@
 	
 	
 	document.onclick=function(){
-		move(box,{width:'300px',height:'500px'});
-		
+		move(box,{width:'303px',height:'93px',opacity:'50'});
 	}
 	
-	function move(obj,mJson,calBack){
+	function move(obj,mJson,callBack){
 	
 		var timer=setInterval(function(){
 			var mark=true;
 			for(var key in mJson){
-				var cur = parseFloat(getStyle(box,key));
+				
 				var target=parseFloat(mJson[key]);
 				
+				if( key == 'opacity' ){
+					var cur = parseFloat(getStyle(box,key))*100;
+				}else{
+					var cur = parseFloat(getStyle(box,key));
+				}
+			//	var speed=Math.ceil((target-cur)*0.2);
 				var speed=(target-cur)*0.2;
+				speed=(target-cur)>0?Math.ceil(speed):Math.floor(speed);
 				console.log(speed);
 				if(cur != target){
-					obj.style[key]=cur+speed+'px';
+					if(key == 'opacity'){
+							obj.style[key]=(cur+speed)/100;
+							obj.style.filter='alpha(opacity='+(cur+speed)/100+')';
+					}else{
+						obj.style[key]=cur+speed+'px';
+					}
+				
 					mark=false;
 				}
 				
@@ -48,10 +60,7 @@
 				clearInterval(timer);
 				callBack && callBack.call(obj)
 			}
-		
 		},1000/60)
-	
-	
 	
 	}
 	
